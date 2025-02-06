@@ -1,0 +1,36 @@
+{
+  "name": "types-storage",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Type-safe storage package built for TypeScript.",
+  "main": "dist/types-storage.cjs",
+  "module": "dist/types-storage.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    "import": "./dist/types-storage.js",
+    "require": "./dist/types-storage.cjs",
+    "types": "./dist/index.d.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/svnrnns/types-storage.git"
+  },
+  "keywords": [
+    "localstorage",
+    "sessionstorage",
+    "typescript",
+    "type-safe",
+    "storage"
+  ],
+  "author": "svnrnns",
+  "license": "MIT",
+  "scripts": {
+    "build": "vite build",
+    "prepublishOnly": "npm run clean && npm run build"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "vite": "^4.0.0",
+    "vite-plugin-dts": "^2.3.0"
+  }
+}
