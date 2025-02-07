@@ -1,6 +1,6 @@
 {
   "name": "types-storage",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "type": "module",
   "description": "Type-safe storage package built for TypeScript.",
   "main": "dist/types-storage.cjs",
@@ -11,6 +11,9 @@
     "require": "./dist/types-storage.cjs",
     "types": "./dist/index.d.ts"
   },
+  "files": [
+    "dist"
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/svnrnns/types-storage.git"
