@@ -7,9 +7,9 @@
   "module": "dist/types-storage.js",
   "types": "dist/index.d.ts",
   "exports": {
+    "types": "./dist/index.d.ts",
     "import": "./dist/types-storage.js",
-    "require": "./dist/types-storage.cjs",
-    "types": "./dist/index.d.ts"
+    "require": "./dist/types-storage.cjs"
   },
   "files": [
     "dist"
