@@ -1,3 +1,5 @@
+import { ZodSchema } from 'zod';
+
 export class TypeSafeStorage {
   /** The storage linked to the item. Usually used as localStorage and sessionStorage. */
   private storage: Storage;
@@ -11,6 +13,15 @@ export class TypeSafeStorage {
   constructor(storage: Storage, namespace?: string) {
     this.storage = storage;
     if (namespace) this.namespace = namespace;
+  }
+
+  private isValidJson(value: any): boolean {
+    try {
+      JSON.parse(value);
+      return true;
+    } catch {
+      return false;
+    }
   }
 
   /**
@@ -62,7 +73,9 @@ export class TypeSafeStorage {
    */
   set<T>(key: string, value: T): void {
     const namespacedKey = this.getNamespacedKey(key);
-    this.storage.setItem(namespacedKey, JSON.stringify(value));
+    const isPrimitive = typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean';
+    const toStoreValue = isPrimitive ? String(value) : JSON.stringify(value);
+    this.storage.setItem(namespacedKey, toStoreValue);
   }
 
   /**
@@ -73,7 +86,7 @@ export class TypeSafeStorage {
    */
   setWithExpiration<T>(key: string, value: T, ttl: number): void {
     const namespacedKey = this.getNamespacedKey(key);
-    this.storage.setItem(namespacedKey, JSON.stringify(value));
+    this.set(key, value);
     setTimeout(() => this.storage.removeItem(namespacedKey), ttl);
   }
 
@@ -81,24 +94,23 @@ export class TypeSafeStorage {
    * Retrieves a value from storage.
    * @param key - The key to retrieve the value from.
    * @param fallback - The fallback value if key is not found or does not match the specified T.
-   * @param validator - An optional validator function.
+   * @param schema - Zod schema to validate the parsed value.
    * @returns - The retrieved value or fallback.
    */
-  get<T>(key: string, fallback: T, validator?: (value: any) => boolean): T {
+  get<T>(key: string, fallback: T, schema: ZodSchema<T>): T {
     const namespacedKey = this.getNamespacedKey(key);
     const item = this.storage.getItem(namespacedKey);
+
     if (item === null) return fallback;
 
-    try {
-      const parsed = JSON.parse(item);
-      if (validator ? validator(parsed) : typeof parsed === typeof fallback) {
-        return parsed as T;
-      }
-    } catch {
-      // JSON parsing failed, fallback to default value
-    }
+    const parsed = this.isValidJson(item) ? JSON.parse(item) : item;
 
-    return fallback;
+    const result = schema.safeParse(parsed);
+    return result.success ? result.data : fallback;
+  }
+  /** Returns the current storage */
+  getStorage() {
+    return this.storage;
   }
 
   /**

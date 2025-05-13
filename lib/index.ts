@@ -1,9 +1,9 @@
+import { ZodSchema } from 'zod';
 import { TypeSafeStorage } from './TypeSafeStorage';
 
 const defaultStorage = new TypeSafeStorage(localStorage);
 
-const get = <T>(key: string, fallback: T, validator?: (value: any) => boolean): T =>
-  defaultStorage.get(key, fallback, validator);
+const get = <T>(key: string, fallback: T, schema: ZodSchema<T>): T => defaultStorage.get(key, fallback, schema);
 
 const set = <T>(key: string, value: T): void => defaultStorage.set(key, value);
 

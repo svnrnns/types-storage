@@ -28,13 +28,21 @@
   "author": "svnrnns",
   "license": "MIT",
   "scripts": {
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:verbose": "vitest run --reporter=verbose",
     "build": "vite build",
     "clean": "rm -rf dist",
     "prepublishOnly": "npm run clean && npm run build"
   },
   "devDependencies": {
+    "happy-dom": "^17.4.7",
     "typescript": "^5.0.0",
     "vite": "^4.0.0",
-    "vite-plugin-dts": "^2.3.0"
+    "vite-plugin-dts": "^2.3.0",
+    "vitest": "^3.1.3"
+  },
+  "dependencies": {
+    "zod": "^3.0.0"
   }
 }
