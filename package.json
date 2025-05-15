@@ -1,6 +1,6 @@
 {
   "name": "types-storage",
-  "version": "1.0.1",
+  "version": "2.0.0",
   "type": "module",
   "description": "Type-safe storage package built for TypeScript.",
   "main": "dist/types-storage.cjs",
