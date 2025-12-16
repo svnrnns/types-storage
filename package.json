@@ -44,9 +44,9 @@
     "vitest": "^4"
   },
   "peerDependencies": {
-    "zod": "^3"
+    "zod": "^4"
   },
   "dependencies": {
-    "zod": "^3"
+    "zod": "^4"
   }
 }

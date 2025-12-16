@@ -74,7 +74,7 @@ const token = storage.get('token', '', tokenSchema);
 
 ## 📜 API Reference
 
-- `get<T>(key: string, fallback: T, schema: ZodSchema<T>): T | null`: Retrieves a value with type safety using a Zod schema.
+- `get<T>(key: string, fallback: T, schema: ZodType<T>): T | null`: Retrieves a value with type safety using a Zod schema.
 
 - `getStorage: Storage`: Retrieves the current storage.
 

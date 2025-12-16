@@ -1,4 +1,4 @@
-import { ZodSchema } from 'zod';
+import { ZodType } from 'zod';
 
 export class TypeSafeStorage {
   /** The storage linked to the item. Usually used as localStorage and sessionStorage. */
@@ -97,7 +97,7 @@ export class TypeSafeStorage {
    * @param schema - Zod schema to validate the parsed value.
    * @returns - The retrieved value or fallback.
    */
-  get<T>(key: string, fallback: T, schema: ZodSchema<T>): T {
+  get<T>(key: string, fallback: T, schema: ZodType<T>): T {
     const namespacedKey = this.getNamespacedKey(key);
     const item = this.storage.getItem(namespacedKey);
 
