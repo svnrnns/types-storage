@@ -21,28 +21,28 @@ npm install types-storage zod
 
 ## Ready to use
 
-Create a `TypeSafeStorage` instance. You can use both `localStorage` and `sessionStorage`:
+Create a `TypedStorage` instance. You can use both `localStorage` and `sessionStorage`:
 
 ```ts
-import { TypeSafeStorage } from 'types-storage';
+import { TypedStorage } from 'types-storage';
 import * as z from 'zod';
 
-const storage = new TypeSafeStorage(localStorage);
+const storage = new TypedStorage(localStorage);
 ```
 
 Use a namespace to prefix keys and avoid conflicts:
 
 ```ts
-const storage = new TypeSafeStorage(sessionStorage, 'my-app');
+const storage = new TypedStorage(sessionStorage, 'my-app');
 ```
 
-Save data to storage using the `set` method:
+Save data to storage using the `setItem` method:
 
 ```ts
-storage.set('theme', 'dark');
+storage.setItem('theme', 'dark');
 
 // Direct method import.
-import { set as setToLocalStorage } from 'types-storage';
+import { setItem as setToLocalStorage } from 'types-storage';
 setToLocalStorage('theme', 'dark');
 ```
 
@@ -50,44 +50,50 @@ Retrieve data with a fallback value and a Zod schema for type safety:
 
 ```ts
 const themeSchema = z.enum(['light', 'dark']);
-const theme = storage.get('theme', 'light', themeSchema);
+const theme = storage.getItem('theme', 'light', themeSchema);
 // Returns 'light' if invalid or not found
 ```
 
 Store and validate arrays or complex objects:
 
 ```ts
-storage.set('filters', ['desc', 'price']);
+storage.setItem('filters', ['desc', 'price']);
 const stringArraySchema = z.array(z.string());
-const filters = storage.get('filters', [], stringArraySchema);
+const filters = storage.getItem('filters', [], stringArraySchema);
 // Returns ['desc', 'price'] or [] if invalid
 ```
 
 Set values with expiration using TTL (in milliseconds):
 
 ```ts
-storage.setWithExpiration('token', 'xxxx', 3600000); // Expires in 1 hour
+storage.setItemWithExpiration('token', 'xxxx', 3600000); // Expires in 1 hour
 const tokenSchema = z.string();
-const token = storage.get('token', '', tokenSchema);
+const token = storage.getItem('token', '', tokenSchema);
 // Returns '' if expired or invalid
 ```
 
 ## 📜 API Reference
 
-- `get<T>(key: string, fallback: T, schema: ZodType<T>): T | null`: Retrieves a value with type safety using a Zod schema.
+- `getItem<T>(key: string, fallback: T, schema: ZodType<T>): T`: Retrieves a value with type safety using a Zod schema.
 
-- `getStorage: Storage`: Retrieves the current storage.
+- `getStorage(): Storage`: Retrieves the current storage.
 
-- `set<T>(key: string, value: T): void`: Stores a value in localStorage.
+- `setItem<T>(key: string, value: T): void`: Stores a value in storage.
 
-- `setWithExpiration<T>(key: string, value: T, ttl: number): void`: Stores a value that expires after ttl milliseconds.
+- `setItemWithExpiration<T>(key: string, value: T, ttl: number): void`: Stores a value that expires after ttl milliseconds.
 
-- `exists(key: string): boolean`: Checks if a key exists.
+- `itemExists(key: string): boolean`: Checks if a key exists.
 
-- `remove(key: string): void`: Removes a key from storage.
+- `removeItem(key: string): void`: Removes a key from storage.
 
 - `clear(): void`: Clears all stored values.
 
-- `length(): number`Returns the total number of stored items.
+- `length(): number`: Returns the total number of stored items.
+
+- `getNamespace(): string | undefined`: Gets the current namespace.
+
+- `setNamespace(namespace: string): void`: Sets a new namespace.
+
+- `static isAvailable(): boolean`: Checks if storage is available.
 
 MIT License © 2025

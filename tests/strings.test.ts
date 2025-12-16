@@ -1,10 +1,10 @@
 import { describe, beforeEach, it, expect } from 'vitest';
-import { TypeSafeStorage } from '../lib/index';
+import { TypedStorage } from '../lib/index';
 import * as z from 'zod';
 
 describe('String Storage', () => {
-  const localStorageInstance = new TypeSafeStorage(localStorage, 'test');
-  const sessionStorageInstance = new TypeSafeStorage(sessionStorage, 'test');
+  const localStorageInstance = new TypedStorage(localStorage, 'test');
+  const sessionStorageInstance = new TypedStorage(sessionStorage, 'test');
 
   [localStorageInstance, sessionStorageInstance].forEach((storage, index) => {
     const storageType = index === 0 ? 'localStorage' : 'sessionStorage';
@@ -17,17 +17,17 @@ describe('String Storage', () => {
         });
 
         it('a literal string', () => {
-          storage.set('locale', 'en');
+          storage.setItem('locale', 'en');
           expect(storage.getStorage().getItem('test:locale')).toBe('en');
         });
 
         it('a string with special characters', () => {
-          storage.set('email', 'hello@world');
+          storage.setItem('email', 'hello@world');
           expect(storage.getStorage().getItem('test:email')).toBe('hello@world');
         });
 
         it('a string array', () => {
-          storage.set('locales', ['en', 'es', 'fr']);
+          storage.setItem('locales', ['en', 'es', 'fr']);
           expect(storage.getStorage().getItem('test:locales')).toBe('["en","es","fr"]');
         });
       });
@@ -39,44 +39,44 @@ describe('String Storage', () => {
         });
 
         it('a string primitive', () => {
-          storage.set('text', 'hello');
+          storage.setItem('text', 'hello');
           const schema = z.string();
-          const result = storage.get('text', 'default', schema);
+          const result = storage.getItem('text', 'default', schema);
           expect(result).toBe('hello');
         });
 
         it('a string primitive fallback', () => {
-          storage.set('text', 1);
+          storage.setItem('text', 1);
           const schema = z.string();
-          const result = storage.get('text', 'default', schema);
+          const result = storage.getItem('text', 'default', schema);
           expect(result).toBe('default');
         });
 
         it('a string array', () => {
-          storage.set('locales', ['en', 'es', 'fr']);
+          storage.setItem('locales', ['en', 'es', 'fr']);
           const schema = z.array(z.string());
-          const result = storage.get('locales', ['default'], schema);
+          const result = storage.getItem('locales', ['default'], schema);
           expect(result).toEqual(['en', 'es', 'fr']);
         });
 
         it('a string array fallback', () => {
-          storage.set('locales', ['en', 23, 'fr']);
+          storage.setItem('locales', ['en', 23, 'fr']);
           const schema = z.array(z.string());
-          const result = storage.get('locales', ['default'], schema);
+          const result = storage.getItem('locales', ['default'], schema);
           expect(result).toEqual(['default']);
         });
 
         it('a string enum', () => {
-          storage.set('locale', 'en');
+          storage.setItem('locale', 'en');
           const schema = z.enum(['en', 'es', 'fr']);
-          const result = storage.get('locale', 'en', schema);
+          const result = storage.getItem('locale', 'en', schema);
           expect(result).toBe('en');
         });
 
         it('a string enum fallback', () => {
-          storage.set('locale', 'invalid');
+          storage.setItem('locale', 'invalid');
           const schema = z.enum(['en', 'es', 'fr']);
-          const result = storage.get('locale', 'en', schema);
+          const result = storage.getItem('locale', 'en', schema);
           expect(result).toBe('en');
         });
       });

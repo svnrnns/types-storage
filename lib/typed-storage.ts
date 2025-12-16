@@ -1,6 +1,6 @@
 import { ZodType } from 'zod';
 
-export class TypeSafeStorage {
+export class TypedStorage {
   /** The storage linked to the item. Usually used as localStorage and sessionStorage. */
   private storage: Storage;
   /** A string that determines the namespace used for every key within the object. */
@@ -71,7 +71,7 @@ export class TypeSafeStorage {
    * @param key - The key to store the value under.
    * @param value - The value to store. Can be anything.
    */
-  set<T>(key: string, value: T): void {
+  setItem<T>(key: string, value: T): void {
     const namespacedKey = this.getNamespacedKey(key);
     const isPrimitive = typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean';
     const toStoreValue = isPrimitive ? String(value) : JSON.stringify(value);
@@ -84,9 +84,9 @@ export class TypeSafeStorage {
    * @param value - The value to store. Can be anything.
    * @param ttl - Time to live in milliseconds.
    */
-  setWithExpiration<T>(key: string, value: T, ttl: number): void {
+  setItemWithExpiration<T>(key: string, value: T, ttl: number): void {
     const namespacedKey = this.getNamespacedKey(key);
-    this.set(key, value);
+    this.setItem(key, value);
     setTimeout(() => this.storage.removeItem(namespacedKey), ttl);
   }
 
@@ -97,7 +97,7 @@ export class TypeSafeStorage {
    * @param schema - Zod schema to validate the parsed value.
    * @returns - The retrieved value or fallback.
    */
-  get<T>(key: string, fallback: T, schema: ZodType<T>): T {
+  getItem<T>(key: string, fallback: T, schema: ZodType<T>): T {
     const namespacedKey = this.getNamespacedKey(key);
     const item = this.storage.getItem(namespacedKey);
 
@@ -117,7 +117,7 @@ export class TypeSafeStorage {
    * Removes a key from storage.
    * @param key - The key to remove.
    */
-  remove(key: string): void {
+  removeItem(key: string): void {
     const namespacedKey = this.getNamespacedKey(key);
     this.storage.removeItem(this.getNamespacedKey(namespacedKey));
   }
@@ -132,7 +132,7 @@ export class TypeSafeStorage {
    * @param key - The key to check.
    * @returns - True if exists, false otherwise.
    */
-  exists(key: string): boolean {
+  itemExists(key: string): boolean {
     const namespacedKey = this.getNamespacedKey(key);
     return this.storage.getItem(namespacedKey) !== null;
   }

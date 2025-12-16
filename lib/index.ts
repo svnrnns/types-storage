@@ -1,13 +1,14 @@
-import { TypeSafeStorage } from './TypeSafeStorage';
+import { TypedStorage } from './typed-storage';
 
-const defaultStorage = new TypeSafeStorage(localStorage);
+const defaultStorage = new TypedStorage(localStorage);
 
-const get: TypeSafeStorage['get'] = (...args) => defaultStorage.get(...args);
-const set: TypeSafeStorage['set'] = (...args) => defaultStorage.set(...args);
-const setWithExpiration: TypeSafeStorage['setWithExpiration'] = (...args) => defaultStorage.setWithExpiration(...args);
-const exists: TypeSafeStorage['exists'] = (...args) => defaultStorage.exists(...args);
-const remove: TypeSafeStorage['remove'] = (...args) => defaultStorage.remove(...args);
-const clear: TypeSafeStorage['clear'] = () => defaultStorage.clear();
-const length: TypeSafeStorage['length'] = () => defaultStorage.length();
+const getItem: TypedStorage['getItem'] = (...args) => defaultStorage.getItem(...args);
+const setItem: TypedStorage['setItem'] = (...args) => defaultStorage.setItem(...args);
+const setItemWithExpiration: TypedStorage['setItemWithExpiration'] = (...args) =>
+  defaultStorage.setItemWithExpiration(...args);
+const itemExists: TypedStorage['itemExists'] = (...args) => defaultStorage.itemExists(...args);
+const removeItem: TypedStorage['removeItem'] = (...args) => defaultStorage.removeItem(...args);
+const clear: TypedStorage['clear'] = () => defaultStorage.clear();
+const length: TypedStorage['length'] = () => defaultStorage.length();
 
-export { TypeSafeStorage, get, set, setWithExpiration, exists, remove, clear, length };
+export { TypedStorage, getItem, setItem, setItemWithExpiration, itemExists, removeItem, clear, length };
