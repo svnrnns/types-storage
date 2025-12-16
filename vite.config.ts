@@ -1,7 +1,7 @@
 import { defineConfig } from 'vite';
 import dts from 'vite-plugin-dts';
 
-const PACKAGE_NAME = 'types-storage';
+const PACKAGE_NAME = 'svnrnns-typed-storage';
 
 export default defineConfig({
   plugins: [
