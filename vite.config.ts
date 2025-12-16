@@ -8,7 +8,7 @@ export default defineConfig({
     dts({
       insertTypesEntry: true,
       outDir: 'dist',
-      entryRoot: 'src',
+      entryRoot: 'lib',
     }),
   ],
   build: {
