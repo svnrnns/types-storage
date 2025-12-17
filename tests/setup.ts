@@ -1,8 +1,8 @@
 import { beforeEach } from 'vitest';
-import { TypeSafeStorage } from '../lib/index';
+import { TypedStorage } from '../lib/index';
 
-const localStorageInstance = new TypeSafeStorage(localStorage);
-const sessionStorageInstance = new TypeSafeStorage(sessionStorage);
+const localStorageInstance = new TypedStorage(localStorage);
+const sessionStorageInstance = new TypedStorage(sessionStorage);
 
 beforeEach(() => {
   localStorageInstance.clear();

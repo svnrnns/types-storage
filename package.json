@@ -1,15 +1,18 @@
 {
-  "name": "types-storage",
+  "name": "@svnrnns/typed-storage",
   "private": false,
-  "version": "2.0.2",
+  "version": "1.0.1",
   "type": "module",
-  "description": "Type-safe storage package built for TypeScript.",
-  "main": "dist/types-storage.cjs",
-  "module": "dist/types-storage.js",
+  "description": "Storage API typed package built for TypeScript with Zod.",
+  "publishConfig": {
+    "access": "public"
+  },
+  "main": "dist/svnrnns-typed-storage.cjs",
+  "module": "dist/svnrnns-typed-storage.js",
   "exports": {
     ".": {
-      "import": "./dist/types-storage.js",
-      "require": "./dist/types-storage.cjs"
+      "import": "./dist/svnrnns-typed-storage.js",
+      "require": "./dist/svnrnns-typed-storage.cjs"
     }
   },
   "files": [
@@ -17,13 +20,13 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/svnrnns/types-storage.git"
+    "url": "git+https://github.com/svnrnns/typed-storage.git"
   },
   "keywords": [
     "localstorage",
     "sessionstorage",
     "typescript",
-    "type-safe",
+    "zod",
     "storage"
   ],
   "author": "svnrnns",
@@ -44,9 +47,14 @@
     "vitest": "^4"
   },
   "peerDependencies": {
-    "zod": "^3"
+    "zod": "^4"
+  },
+  "peerDependenciesMeta": {
+    "zod": {
+      "optional": false
+    }
   },
   "dependencies": {
-    "zod": "^3"
+    "zod": "^4"
   }
 }

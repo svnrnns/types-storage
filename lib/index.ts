@@ -1,21 +1,14 @@
-import { ZodSchema } from 'zod';
-import { TypeSafeStorage } from './TypeSafeStorage';
+import { TypedStorage } from './typed-storage';
 
-const defaultStorage = new TypeSafeStorage(localStorage);
+const defaultStorage = new TypedStorage(localStorage);
 
-const get = <T>(key: string, fallback: T, schema: ZodSchema<T>): T => defaultStorage.get(key, fallback, schema);
+const getItem: TypedStorage['getItem'] = (...args) => defaultStorage.getItem(...args);
+const setItem: TypedStorage['setItem'] = (...args) => defaultStorage.setItem(...args);
+const setItemWithExpiration: TypedStorage['setItemWithExpiration'] = (...args) =>
+  defaultStorage.setItemWithExpiration(...args);
+const itemExists: TypedStorage['itemExists'] = (...args) => defaultStorage.itemExists(...args);
+const removeItem: TypedStorage['removeItem'] = (...args) => defaultStorage.removeItem(...args);
+const clear: TypedStorage['clear'] = () => defaultStorage.clear();
+const length: TypedStorage['length'] = () => defaultStorage.length();
 
-const set = <T>(key: string, value: T): void => defaultStorage.set(key, value);
-
-const setWithExpiration = <T>(key: string, value: T, ttl: number): void =>
-  defaultStorage.setWithExpiration(key, value, ttl);
-
-const exists = (key: string): boolean => defaultStorage.exists(key);
-
-const remove = (key: string): void => defaultStorage.remove(key);
-
-const clear = (): void => defaultStorage.clear();
-
-const length = (): number => defaultStorage.length();
-
-export { TypeSafeStorage, get, set, setWithExpiration, exists, remove, clear, length };
+export { TypedStorage, getItem, setItem, setItemWithExpiration, itemExists, removeItem, clear, length };
