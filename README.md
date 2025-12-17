@@ -1,6 +1,6 @@
-# Type Safe Storage
+# Typed Storage
 
-`types-storage` is a lightweight TypeScript library that ensures the desired type is correctly returned every time an item is retrieved from `localStorage` or `sessionStorage`, using **Zod**.
+`@svnrnns/typed-storage` is a lightweight TypeScript library that ensures the desired type is correctly returned every time an item is retrieved from `localStorage` or `sessionStorage`, using **Zod**.
 
 ## Features
 
@@ -13,10 +13,10 @@
 
 ## Installation
 
-You can install `types-storage` via npm:
+You can install `@svnrnns/typed-storage` via npm:
 
 ```bash
-npm install types-storage zod
+npm install @svnrnns/typed-storage zod
 ```
 
 ## Ready to use
@@ -24,7 +24,7 @@ npm install types-storage zod
 Create a `TypedStorage` instance. You can use both `localStorage` and `sessionStorage`:
 
 ```ts
-import { TypedStorage } from 'types-storage';
+import { TypedStorage } from '@svnrnns/typed-storage';
 import * as z from 'zod';
 
 const storage = new TypedStorage(localStorage);
@@ -33,7 +33,7 @@ const storage = new TypedStorage(localStorage);
 Use a namespace to prefix keys and avoid conflicts:
 
 ```ts
-const storage = new TypedStorage(sessionStorage, 'my-app');
+const storage = new TypedStorage(localStorage, 'my-app');
 ```
 
 Save data to storage using the `setItem` method:
@@ -42,7 +42,7 @@ Save data to storage using the `setItem` method:
 storage.setItem('theme', 'dark');
 
 // Direct method import.
-import { setItem as setToLocalStorage } from 'types-storage';
+import { setItem as setToLocalStorage } from '@svnrnns/typed-storage';
 setToLocalStorage('theme', 'dark');
 ```
 
@@ -72,28 +72,20 @@ const token = storage.getItem('token', '', tokenSchema);
 // Returns '' if expired or invalid
 ```
 
-## 📜 API Reference
+## API Reference
 
-- `getItem<T>(key: string, fallback: T, schema: ZodType<T>): T`: Retrieves a value with type safety using a Zod schema.
-
-- `getStorage(): Storage`: Retrieves the current storage.
-
-- `setItem<T>(key: string, value: T): void`: Stores a value in storage.
-
-- `setItemWithExpiration<T>(key: string, value: T, ttl: number): void`: Stores a value that expires after ttl milliseconds.
-
-- `itemExists(key: string): boolean`: Checks if a key exists.
-
-- `removeItem(key: string): void`: Removes a key from storage.
-
-- `clear(): void`: Clears all stored values.
-
-- `length(): number`: Returns the total number of stored items.
-
-- `getNamespace(): string | undefined`: Gets the current namespace.
-
-- `setNamespace(namespace: string): void`: Sets a new namespace.
-
-- `static isAvailable(): boolean`: Checks if storage is available.
+| Method                                      | Returns               | Description                                           |
+| ------------------------------------------- | --------------------- | ----------------------------------------------------- |
+| `getItem<T>(key, fallback, schema)`         | `T`                   | Retrieves a value with type safety using a Zod schema |
+| `setItem<T>(key, value)`                    | `void`                | Stores a value in storage                             |
+| `setItemWithExpiration<T>(key, value, ttl)` | `void`                | Stores a value that expires after `ttl` milliseconds  |
+| `itemExists(key)`                           | `boolean`             | Checks if a key exists                                |
+| `removeItem(key)`                           | `void`                | Removes a key from storage                            |
+| `clear()`                                   | `void`                | Clears all stored values                              |
+| `length()`                                  | `number`              | Returns the total number of stored items              |
+| `getStorage()`                              | `Storage`             | Retrieves the current storage instance                |
+| `getNamespace()`                            | `string \| undefined` | Gets the current namespace                            |
+| `setNamespace(namespace)`                   | `void`                | Sets a new namespace                                  |
+| `static isAvailable()`                      | `boolean`             | Checks if storage is available                        |
 
 MIT License © 2025

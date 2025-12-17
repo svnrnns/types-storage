@@ -1,9 +1,12 @@
 {
   "name": "@svnrnns/typed-storage",
   "private": false,
-  "version": "4.0.0",
+  "version": "1.0.1",
   "type": "module",
-  "description": "Typed storage package built for TypeScript with Zod.",
+  "description": "Storage API typed package built for TypeScript with Zod.",
+  "publishConfig": {
+    "access": "public"
+  },
   "main": "dist/svnrnns-typed-storage.cjs",
   "module": "dist/svnrnns-typed-storage.js",
   "exports": {
@@ -17,7 +20,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/svnrnns/typed-storage.git"
+    "url": "git+https://github.com/svnrnns/typed-storage.git"
   },
   "keywords": [
     "localstorage",
@@ -45,6 +48,11 @@
   },
   "peerDependencies": {
     "zod": "^4"
+  },
+  "peerDependenciesMeta": {
+    "zod": {
+      "optional": false
+    }
   },
   "dependencies": {
     "zod": "^4"

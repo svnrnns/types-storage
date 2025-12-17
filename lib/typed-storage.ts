@@ -1,5 +1,9 @@
 import { ZodType } from 'zod';
 
+/**
+ * A Storage API used to store and retrieve values from
+ * localStorage or sessionStorage with type safety using Zod.
+ */
 export class TypedStorage {
   /** The storage linked to the item. Usually used as localStorage and sessionStorage. */
   private storage: Storage;
