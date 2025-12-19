@@ -1,31 +1,23 @@
-import { ZodType } from 'zod';
+import type { ZodType } from 'zod';
+import { _isValidJson } from './utils';
 
 /**
  * A Storage API used to store and retrieve values from
- * localStorage or sessionStorage with type safety using Zod.
+ * localStorage or sessionStorage with optional type safety using Zod.
  */
 export class TypedStorage {
   /** The storage linked to the item. Usually used as localStorage and sessionStorage. */
-  private storage: Storage;
+  private storage: globalThis.Storage;
   /** A string that determines the namespace used for every key within the object. */
   private namespace?: string;
 
   /**
-   * @param storage - The storage type, commonly localSotrage or sessionStorage
+   * @param storage - The storage type, commonly localStorage or sessionStorage
    * @param namespace - Optional namespace for keys
    */
-  constructor(storage: Storage, namespace?: string) {
+  constructor(storage: globalThis.Storage, namespace?: string) {
     this.storage = storage;
     if (namespace) this.namespace = namespace;
-  }
-
-  private isValidJson(value: any): boolean {
-    try {
-      JSON.parse(value);
-      return true;
-    } catch {
-      return false;
-    }
   }
 
   /**
@@ -33,7 +25,7 @@ export class TypedStorage {
    * @param key - The key to namespace.
    * @returns - The namespaced key.
    */
-  private getNamespacedKey(key: string): string {
+  private _getNamespacedKey(key: string): string {
     return this.namespace ? `${this.namespace}:${key}` : key;
   }
 
@@ -41,7 +33,7 @@ export class TypedStorage {
    * Gets the current namespace.
    * @returns - Can be undefined.
    */
-  public getNamespace(): string | undefined {
+  getNamespace(): string | undefined {
     return this.namespace;
   }
 
@@ -49,7 +41,7 @@ export class TypedStorage {
    * Sets a new namespace
    * @param namespace - The namespace
    */
-  public setNamespace(namespace: string): void {
+  setNamespace(namespace: string): void {
     if (typeof namespace === 'string') {
       this.namespace = namespace;
     }
@@ -76,7 +68,7 @@ export class TypedStorage {
    * @param value - The value to store. Can be anything.
    */
   setItem<T>(key: string, value: T): void {
-    const namespacedKey = this.getNamespacedKey(key);
+    const namespacedKey = this._getNamespacedKey(key);
     const isPrimitive = typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean';
     const toStoreValue = isPrimitive ? String(value) : JSON.stringify(value);
     this.storage.setItem(namespacedKey, toStoreValue);
@@ -89,31 +81,53 @@ export class TypedStorage {
    * @param ttl - Time to live in milliseconds.
    */
   setItemWithExpiration<T>(key: string, value: T, ttl: number): void {
-    const namespacedKey = this.getNamespacedKey(key);
+    const namespacedKey = this._getNamespacedKey(key);
     this.setItem(key, value);
     setTimeout(() => this.storage.removeItem(namespacedKey), ttl);
   }
 
   /**
    * Retrieves a value from storage.
+   * @template T - The expected type of the retrieved value.
    * @param key - The key to retrieve the value from.
-   * @param fallback - The fallback value if key is not found or does not match the specified T.
+   * @returns - The retrieved value or null if not found.
+   */
+  getItem<T = string>(key: string): T | null;
+  /**
+   * Retrieves a value from storage with a fallback.
+   * @template T - The expected type of the retrieved value.
+   * @param key - The key to retrieve the value from.
+   * @param fallback - The fallback value if key is not found.
+   * @returns - The retrieved value or fallback.
+   */
+  getItem<T>(key: string, fallback: T): T;
+  /**
+   * Retrieves a value from storage with a fallback and Zod validation.
+   * @template T - The expected type of the retrieved value.
+   * @param key - The key to retrieve the value from.
+   * @param fallback - The fallback value if key is not found or does not match the schema.
    * @param schema - Zod schema to validate the parsed value.
    * @returns - The retrieved value or fallback.
    */
-  getItem<T>(key: string, fallback: T, schema: ZodType<T>): T {
-    const namespacedKey = this.getNamespacedKey(key);
+  getItem<T>(key: string, fallback: T, schema: ZodType<T>): T;
+  getItem<T>(key: string, fallback?: T, schema?: ZodType<T>): T | null {
+    const namespacedKey = this._getNamespacedKey(key);
     const item = this.storage.getItem(namespacedKey);
 
-    if (item === null) return fallback;
+    if (item === null) return fallback ?? null;
 
-    const parsed = this.isValidJson(item) ? JSON.parse(item) : item;
+    const parsed = _isValidJson(item) ? JSON.parse(item) : item;
 
-    const result = schema.safeParse(parsed);
-    return result.success ? result.data : fallback;
+    if (schema) {
+      const result = schema.safeParse(parsed);
+      return result.success ? result.data : (fallback as T);
+    }
+
+    return parsed as T;
   }
+
   /** Returns the current storage */
-  getStorage() {
+  getStorage(): globalThis.Storage {
     return this.storage;
   }
 
@@ -122,8 +136,8 @@ export class TypedStorage {
    * @param key - The key to remove.
    */
   removeItem(key: string): void {
-    const namespacedKey = this.getNamespacedKey(key);
-    this.storage.removeItem(this.getNamespacedKey(namespacedKey));
+    const namespacedKey = this._getNamespacedKey(key);
+    this.storage.removeItem(namespacedKey);
   }
 
   /** Removes all keys from storage. */
@@ -137,7 +151,7 @@ export class TypedStorage {
    * @returns - True if exists, false otherwise.
    */
   itemExists(key: string): boolean {
-    const namespacedKey = this.getNamespacedKey(key);
+    const namespacedKey = this._getNamespacedKey(key);
     return this.storage.getItem(namespacedKey) !== null;
   }
 

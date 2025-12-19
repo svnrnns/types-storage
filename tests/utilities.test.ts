@@ -2,7 +2,7 @@ import { describe, beforeEach, it, expect, vi } from 'vitest';
 import { TypedStorage } from '../lib/index';
 import * as z from 'zod';
 
-describe('Utility Storage', () => {
+describe('Utility TypedStorage', () => {
   const localStorageInstance = new TypedStorage(localStorage, 'test');
   const sessionStorageInstance = new TypedStorage(sessionStorage, 'test');
 
